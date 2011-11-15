@@ -29,16 +29,18 @@ import org.bigbluebutton.deskshare.client.net.NetworkStreamSender;
 public class MouseLocationListenerImp implements MouseLocationListener {
 
 	private final NetworkStreamSender sender;
-	private final String room;
+	//private final String room;
 	
-	public MouseLocationListenerImp(NetworkStreamSender sender, String room) {
+	//public MouseLocationListenerImp(NetworkStreamSender sender, String room) {
+        public MouseLocationListenerImp(NetworkStreamSender sender) {
 		this.sender = sender;
-		this.room = room;
+		//this.room = room;
 	}
 	
 	@Override
 	public void onMouseLocationUpdate(Point loc) {
-		CursorMessage msg = new CursorMessage(loc, room);
+		//CursorMessage msg = new CursorMessage(loc, room);
+            CursorMessage msg = new CursorMessage(loc);
 		sender.send(msg);
 	}
 

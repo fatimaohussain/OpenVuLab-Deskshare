@@ -35,7 +35,7 @@ import com.myjavatools.web.ClientHttpRequest;
 
 public class NetworkHttpStreamSender implements Runnable {	
 	private static final String SEQ_NUM = "sequenceNumber";
-	private static final String ROOM = "room";
+	//-private static final String ROOM = "room";
 	private static final String BLOCK = "blockInfo";
 	private static final String EVENT = "event";
 	private static final String SCREEN = "screenInfo";
@@ -45,11 +45,11 @@ public class NetworkHttpStreamSender implements Runnable {
 	private static final String MOUSEX = "mousex";
 	private static final String MOUSEY = "mousey";
 	
-	private String host = "localhost";
+	//-private String host = "localhost";
 	private static final String SCREEN_CAPTURE__URL = "/deskshare/tunnel/screenCapture";
 	private URL url;
 	URLConnection conn;
-	private String room;
+	//-private String room;
 	private Dimension screenDim;
 	private Dimension blockDim;
 	private final NextBlockRetriever retriever;
@@ -57,12 +57,25 @@ public class NetworkHttpStreamSender implements Runnable {
 	private final int id;
 	private NetworkStreamListener listener;
 	private final SequenceNumberGenerator seqNumGenerator;
+        
+        private CaptureEventInfo startEvent;
+        private CaptureEventInfo endEvent;
+
+        private CaptureEventInfo cursorInfo;
+
+        private CaptureEventInfo blockDataInfo;
+
+        
 	
-	public NetworkHttpStreamSender(int id, NextBlockRetriever retriever, String room, 
+	//-public NetworkHttpStreamSender(int id, NextBlockRetriever retriever, String room, 
+	//-								Dimension screenDim, Dimension blockDim, SequenceNumberGenerator seqNumGenerator) {
+	
+        public NetworkHttpStreamSender(int id, NextBlockRetriever retriever, 
 									Dimension screenDim, Dimension blockDim, SequenceNumberGenerator seqNumGenerator) {
-		this.id = id;
+	
+                this.id = id;
 		this.retriever = retriever;
-		this.room = room;
+		//-this.room = room;
 		this.screenDim = screenDim;
 		this.blockDim = blockDim;
 		this.seqNumGenerator = seqNumGenerator;
@@ -77,11 +90,12 @@ public class NetworkHttpStreamSender implements Runnable {
 	}
 	
 	public void connect(String host) throws ConnectionException {
-		this.host = host;
-		System.out.println("Starting NetworkHttpStreamSender to " + host);
-		openConnection();
+		//-this.host = host;
+		//-System.out.println("Starting NetworkHttpStreamSender to " + host);
+		//-openConnection();
 	}
 
+        
 	private void openConnection() throws ConnectionException {
 		/**
 		 * Need to re-establish connection each time, otherwise, 
@@ -89,7 +103,8 @@ public class NetworkHttpStreamSender implements Runnable {
 		 * 
 		 * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4382944
 		 * 
-		 */				
+		 */
+            /*
 		try {			
 			url = new URL("http://" + host + SCREEN_CAPTURE__URL);
 			conn = url.openConnection();
@@ -100,6 +115,8 @@ public class NetworkHttpStreamSender implements Runnable {
 			e.printStackTrace();
 			throw new ConnectionException("IOException while connecting to " + url.toString());
 		}
+             *
+             */
 	}
 	
 	public void sendStartStreamMessage() {
@@ -113,26 +130,34 @@ public class NetworkHttpStreamSender implements Runnable {
 	}
 
 	private void sendCaptureStartEvent(Dimension screen, Dimension block) throws ConnectionException {
-		ClientHttpRequest chr;
-		try {
-			chr = new ClientHttpRequest(conn);
-			chr.setParameter(ROOM, room);
-			
-			chr.setParameter(SEQ_NUM, seqNumGenerator.getNext());
+		//ClientHttpRequest chr;
+		//try {
+			//chr = new ClientHttpRequest(conn);
+			//--chr.setParameter(ROOM, room);
+
+
+
+			//chr.setParameter(SEQ_NUM, seqNumGenerator.getNext());
+                        String seq = seqNumGenerator.getNext() + "";
 			String screenInfo = Integer.toString(screen.getWidth())
 								+ "x" + Integer.toString(screen.getHeight());
-			chr.setParameter(SCREEN, screenInfo);
+			//chr.setParameter(SCREEN, screenInfo);
 			
 			String blockInfo = Integer.toString(block.getWidth())
 								+ "x" + Integer.toString(block.getHeight());
-			chr.setParameter(BLOCK, blockInfo);
+			//chr.setParameter(BLOCK, blockInfo);
 
-			chr.setParameter(EVENT, CaptureEvents.CAPTURE_START.getEvent());
-			chr.post();
+			//chr.setParameter(EVENT, CaptureEvents.CAPTURE_START.getEvent());
+			
+                        String event = CaptureEvents.CAPTURE_START.getEvent()+ "";
+
+                        startEvent = new CaptureEventInfo (seq,screenInfo,blockInfo,event );
+                        /*
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new ConnectionException("IOException while sending capture start event.");
-		}
+		}*/
+
 
 	}
 	
@@ -151,25 +176,33 @@ public class NetworkHttpStreamSender implements Runnable {
 	}
 
 	private void sendCaptureEndEvent() throws ConnectionException {
-		ClientHttpRequest chr;
-		try {
-			chr = new ClientHttpRequest(conn);
-			chr.setParameter(ROOM, room);
-			chr.setParameter(SEQ_NUM, seqNumGenerator.getNext());
-			chr.setParameter(EVENT, CaptureEvents.CAPTURE_END.getEvent());
-			chr.post();
-		} catch (IOException e) {
+		//ClientHttpRequest chr;
+		//try {
+		//	chr = new ClientHttpRequest(conn);
+			//chr.setParameter(ROOM, room);
+			//chr.setParameter(SEQ_NUM, seqNumGenerator.getNext());
+			//chr.setParameter(EVENT, CaptureEvents.CAPTURE_END.getEvent());
+                        
+                         String seq = seqNumGenerator.getNext() + "";
+                         String event = CaptureEvents.CAPTURE_START.getEvent()+ "";
+
+                        endEvent = new CaptureEventInfo (seq,event );
+
+		//	chr.post();
+		/*} catch (IOException e) {
 			e.printStackTrace();
 			throw new ConnectionException("IOException while sending capture end event.");
-		}
+		}*/
 	}
-	
+
+       
+
 	private void processNextMessageToSend(Message message) {
 		if (message.getMessageType() == Message.MessageType.BLOCK) {		
 			Integer[] changedBlocks = ((BlockMessage)message).getBlocks();
 			for (int i = 0; i < changedBlocks.length; i++) {
 				EncodedBlockData block = retriever.getBlockToSend((Integer)changedBlocks[i]);
-				BlockVideoData	bv = new BlockVideoData(room, block.getPosition(), block.getVideoData(), false /* should remove later */);	
+				BlockVideoData	bv = new BlockVideoData(block.getPosition(), block.getVideoData(), false /* should remove later */);	
 				sendBlockData(bv);
 			}
 			for (int i = 0; i< changedBlocks.length; i++) {
@@ -177,7 +210,8 @@ public class NetworkHttpStreamSender implements Runnable {
 			}
 		} else if (message.getMessageType() == Message.MessageType.CURSOR) {
 			CursorMessage msg = (CursorMessage)message;
-			sendCursor(msg.getMouseLocation(), msg.getRoom());
+			//sendCursor(msg.getMouseLocation(), msg.getRoom());
+                        sendCursor(msg.getMouseLocation());
 		}
 	}
 	
@@ -197,41 +231,87 @@ public class NetworkHttpStreamSender implements Runnable {
 		}
 	}
 	
-	private void sendCursor(Point mouseLoc, String room) {
-		ClientHttpRequest chr;
-		try {
-			openConnection();
-			chr = new ClientHttpRequest(conn);
-			chr.setParameter(ROOM, room);
-			chr.setParameter(SEQ_NUM, seqNumGenerator.getNext());
-			chr.setParameter(EVENT, CaptureEvents.MOUSE_LOCATION_EVENT.getEvent());
-			chr.setParameter(MOUSEX, mouseLoc.x);
-			chr.setParameter(MOUSEY, mouseLoc.y);
-			chr.post();		
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ConnectionException e) {
-				System.out.println("ERROR: Failed to send block data.");
-			}
+	//private void sendCursor(Point mouseLoc, String room) {
+        private void sendCursor(Point mouseLoc) {
+		//ClientHttpRequest chr;
+		//try {
+		//	openConnection();
+		//	chr = new ClientHttpRequest(conn);
+			//chr.setParameter(ROOM, room);
+			//chr.setParameter(SEQ_NUM, s//eqNumGenerator.getNext());
+			//chr.setParameter(EVENT, CaptureEvents.MOUSE_LOCATION_EVENT.getEvent());
+		//	chr.setParameter(MOUSEX, mouseLoc.x);
+		//	chr.setParameter(MOUSEY, mouseLoc.y);
+			//chr.post();
+
+                         String seq = seqNumGenerator.getNext() + "";
+                         String event = CaptureEvents.CAPTURE_START.getEvent()+ "";
+                         String x = mouseLoc.x + "";
+                         String y = mouseLoc.y + "";
+
+                        cursorInfo = new CaptureEventInfo (seq,x,y );
+                        cursorInfo.setEvent(event);
+
+		//	} catch (IOException e) {
+		//		e.printStackTrace();
+		//	} catch (ConnectionException e) {
+		//		System.out.println("ERROR: Failed to send block data.");
+		//	}
 	}
 	
 	private void sendBlockData(BlockVideoData blockData) {
-	    ClientHttpRequest chr;
-		try {
-			openConnection();
-			chr = new ClientHttpRequest(conn);
-		    chr.setParameter(ROOM, blockData.getRoom());
-		    chr.setParameter(SEQ_NUM, seqNumGenerator.getNext());
-		    chr.setParameter(POSITION, blockData.getPosition());
-		    chr.setParameter(KEYFRAME, blockData.isKeyFrame());
-		    chr.setParameter(EVENT, CaptureEvents.CAPTURE_UPDATE.getEvent());
-			ByteArrayInputStream block = new ByteArrayInputStream(blockData.getVideoData());				
-			chr.setParameter(BLOCKDATA, "block", block);
-			chr.post();		
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ConnectionException e) {
-			System.out.println("ERROR: Failed to send block data.");
-		}
-	}		
+	    //ClientHttpRequest chr;
+		//try {
+		//	openConnection();
+		//	chr = new ClientHttpRequest(conn);
+		    //chr.setParameter(ROOM, blockData.getRoom());
+		   // chr.setParameter(SEQ_NUM, seqNumGenerator.getNext());
+		    //chr.setParameter(POSITION, blockData.getPosition());
+		    //chr.setParameter(KEYFRAME, blockData.isKeyFrame());
+		    //chr.setParameter(EVENT, CaptureEvents.CAPTURE_UPDATE.getEvent());
+                    //ByteArrayInputStream block = new ByteArrayInputStream(blockData.getVideoData());
+                    //chr.setParameter(BLOCKDATA, "block", block);
+                    //chr.post();
+
+                    String seq = seqNumGenerator.getNext() + "";
+                    String event = CaptureEvents.CAPTURE_START.getEvent()+ "";
+
+                    blockDataInfo = new CaptureEventInfo (seq,event );
+
+                    blockDataInfo.setKeyFrame(blockData.isKeyFrame() + "");
+                    blockDataInfo.setPosition(blockData.getPosition()+ "");
+                    blockDataInfo.setBlockData(blockData);
+
+
+
+	//	} catch (IOException e) {
+	//		e.printStackTrace();
+	//	} catch (ConnectionException e) {
+	//		System.out.println("ERROR: Failed to send block data.");
+	//	}
+	}
+
+         //Added by Fatima
+        public CaptureEventInfo getCaptureStartEvent(){
+
+            return startEvent;
+        }
+
+        public CaptureEventInfo getCaptureEndEvent(){
+
+            return endEvent;
+        }
+
+        public CaptureEventInfo getCursorInfo(){
+
+            return cursorInfo;
+        }
+
+        public CaptureEventInfo getBlockDataInfo(){
+
+            return blockDataInfo;
+        }
+
+
+        
 }

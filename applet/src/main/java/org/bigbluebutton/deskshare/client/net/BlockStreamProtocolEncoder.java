@@ -33,11 +33,14 @@ public class BlockStreamProtocolEncoder {
     private static final byte CAPTURE_END_EVENT = 2;
     private static final byte MOUSE_LOCATION_EVENT = 3;
     
-	public static void encodeStartStreamMessage(String room, Dimension screen, Dimension block,
+	//-public static void encodeStartStreamMessage(String room, Dimension screen, Dimension block,
+	//-					ByteArrayOutputStream data, int seqNum) throws IOException {	
+	
+    public static void encodeStartStreamMessage(Dimension screen, Dimension block,
 						ByteArrayOutputStream data, int seqNum) throws IOException {	
-		
+	
 		data.write(CAPTURE_START_EVENT);
-		encodeRoom(data, room);
+		//encodeRoom(data,room);
 		encodeSequenceNumber(data, seqNum);
 		
 		data.write(intToBytes(block.getWidth()));
@@ -48,7 +51,7 @@ public class BlockStreamProtocolEncoder {
 	
 	public static void encodeBlock(BlockVideoData block, ByteArrayOutputStream data, int seqNum) throws IOException {		
 		data.write(CAPTURE_UPDATE_EVENT);
-		encodeRoom(data, block.getRoom());
+		//encodeRoom(data,room);
 		
 		encodeSequenceNumber(data, seqNum);
 		
@@ -72,9 +75,10 @@ public class BlockStreamProtocolEncoder {
 		data.write(nb);
 	}
 	
-	public static void encodeRoomAndSequenceNumber(String room, int seqNum, ByteArrayOutputStream data) throws IOException{
+	//public static void encodeRoomAndSequenceNumber(String room, int seqNum, ByteArrayOutputStream data) throws IOException{
+        public static void encodeRoomAndSequenceNumber(int seqNum, ByteArrayOutputStream data) throws IOException{
 		data.write(CAPTURE_UPDATE_EVENT);
-		encodeRoom(data, room);		
+		//encodeRoom(data, room);		
 		encodeSequenceNumber(data, seqNum);		
 	}
 	
@@ -99,17 +103,18 @@ public class BlockStreamProtocolEncoder {
 		return header.toByteArray();
 	}
 	
-	public static void encodeMouseLocation(Point mouseLoc, String room, ByteArrayOutputStream data, int seqNum) throws IOException {		
-		data.write(MOUSE_LOCATION_EVENT);
-		encodeRoom(data, room);
+	//public static void encodeMouseLocation(Point mouseLoc, String room, ByteArrayOutputStream data, int seqNum) throws IOException {
+	public static void encodeMouseLocation(Point mouseLoc,ByteArrayOutputStream data, int seqNum) throws IOException {
+                data.write(MOUSE_LOCATION_EVENT);
+		//encodeRoom(data, room);
 		encodeSequenceNumber(data, seqNum);
 		data.write(intToBytes(mouseLoc.x));
 		data.write(intToBytes(mouseLoc.y));
 	}
 	
-	public static void encodeEndStreamMessage(String room, ByteArrayOutputStream data, int seqNum) throws IOException {		
+	public static void encodeEndStreamMessage(ByteArrayOutputStream data, int seqNum) throws IOException {		
 		data.write(CAPTURE_END_EVENT);
-		encodeRoom(data, room);
+		//encodeRoom(data, room);
 		encodeSequenceNumber(data, seqNum);
 	}
 	
@@ -121,12 +126,12 @@ public class BlockStreamProtocolEncoder {
 		data[3] = (byte)(i & 0xff);		
 		return data;
 	}
-	
+	/*
 	private static void encodeRoom(ByteArrayOutputStream data, String room) throws IOException {
 		data.write(room.length());
 		data.write(room.getBytes());
 	}
-	
+	*/
 	private static void encodeSequenceNumber(ByteArrayOutputStream data, int seqNum) throws IOException {
 		data.write(intToBytes(seqNum));
 	}

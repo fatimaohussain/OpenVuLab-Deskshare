@@ -23,6 +23,7 @@ package org.bigbluebutton.deskshare.client.encoder;
 
 public class BlockEncodeException extends Exception {
 
+    
 	private static final long serialVersionUID = -3377474098350652011L;
 
 	public BlockEncodeException(String message) {

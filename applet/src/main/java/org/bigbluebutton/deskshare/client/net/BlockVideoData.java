@@ -21,23 +21,23 @@ package org.bigbluebutton.deskshare.client.net;
 
 public class BlockVideoData {
 
-	private final String room;
+	//-private final String room;
 	private final byte[] videoData;
 	private final boolean keyFrame;
 	private final int position;
 	private final long timestamp;
 	
-	public BlockVideoData(String room, int position, byte[] videoData, boolean keyFrame) {
-		this.room = room;
+	public BlockVideoData( int position, byte[] videoData, boolean keyFrame) {
+		//-this.room = room;
 		this.position = position;
 		this.videoData = videoData;
 		this.keyFrame = keyFrame;
 		timestamp = System.currentTimeMillis();
 	}
-	
+	/*
 	public String getRoom() {
 		return room;
-	}
+	}*/
 
 	public int getPosition() {
 		return position;

@@ -122,8 +122,8 @@ public class BlockStreamSender implements ScreenCaptureSender {
 		dataToSend.reset();
 		try {
 			dataToSend.write(CAPTURE_UPDATE_EVENT);
-			dataToSend.write(block.getRoom().length());
-			dataToSend.write(block.getRoom().getBytes());
+			//-dataToSend.write(block.getRoom().length());
+			//-dataToSend.write(block.getRoom().getBytes());
 			
 			byte[] position = new byte[2];
 			int pos = block.getPosition();

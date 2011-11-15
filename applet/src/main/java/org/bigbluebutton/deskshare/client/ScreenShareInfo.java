@@ -18,15 +18,17 @@
 * with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 * 
 * ===License Header===
+ * 
+ * modified by Fatima Hussain for OpenVULab
 */
 package org.bigbluebutton.deskshare.client;
 
 import java.awt.Image;
 
 public class ScreenShareInfo {
-   	public String host;
-   	public int port;
-   	public String room;
+   	//public String host;
+   	//public int port;
+   	//public String room;
    	public int captureWidth;
    	public int captureHeight;
    	public int scaleWidth;
@@ -35,7 +37,7 @@ public class ScreenShareInfo {
    	public boolean aspectRatio;
    	public int x;
    	public int y;
-   	public boolean httpTunnel;
+   	//public boolean httpTunnel;
    	public boolean fullScreen;
    	public Image sysTrayIcon;
    	public boolean enableTrayActions;

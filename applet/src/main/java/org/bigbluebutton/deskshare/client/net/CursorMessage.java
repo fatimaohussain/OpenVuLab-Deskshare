@@ -24,11 +24,12 @@ import java.awt.Point;
 public class CursorMessage implements Message {
 
 	private Point mouseLoc;
-	private String room;
+	//private String room;
 	
-	public CursorMessage(Point mouseLoc, String room) {
+	//public CursorMessage(Point mouseLoc, String room) {
+        public CursorMessage(Point mouseLoc) {
 		this.mouseLoc = mouseLoc;
-		this.room = room;
+		//this.room = room;
 	}
 	
 	@Override
@@ -39,8 +40,11 @@ public class CursorMessage implements Message {
 	public Point getMouseLocation() {
 		return mouseLoc;
 	}
-	
+
+        /*
 	public String getRoom() {
 		return room;
 	}
+         *
+         */
 }

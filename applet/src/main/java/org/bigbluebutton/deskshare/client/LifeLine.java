@@ -26,7 +26,7 @@ import java.io.*;
 
 public class LifeLine {
 
-	private int port;
+	//private int port;
 	private ServerSocket serverSocket = null;
 	private Socket clientSocket = null;
 	private boolean connected = false;
@@ -36,13 +36,14 @@ public class LifeLine {
     private Thread lifeLineThread;
     private LifeLineServer lifeLineServer;
     
-	public LifeLine(int port, LifeLineListener listener) {
-		this.port = port;
+	//public LifeLine(int port, LifeLineListener listener) {
+    public LifeLine( LifeLineListener listener) {
+		//this.port = port;
 		this.listener = listener;
 	}
 	
 	public void listen() {
-		System.out.println("Starting listener on port " + port);
+		System.out.println("Starting listener ");
 		lifeLineServer = new LifeLineServer();
 		lifeLineThread = new Thread(lifeLineServer, "LifeLineServer");
 		lifeLineThread.start();       
@@ -61,9 +62,9 @@ public class LifeLine {
 		public void run() {
 			 try {
 		            serverSocket = new ServerSocket();
-		            serverSocket.bind(new InetSocketAddress(InetAddress.getLocalHost(), port));
+		            //serverSocket.bind(new InetSocketAddress(InetAddress.getLocalHost(), port));
 		        } catch (IOException e) {
-		            System.err.println("Could not listen on port: " + port);
+		            System.err.println("Could not listen on port: " );
 		            notifyListener(ExitCode.CANNOT_BIND_TO_LIFELINE_PORT);
 		        }
 		        

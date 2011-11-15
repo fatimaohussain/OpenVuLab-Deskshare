@@ -81,17 +81,17 @@ public class BlockManager {
 		
 		int numberOfBlocks = numColumns * numRows;
 		for (int position = 1; position <= numberOfBlocks; position++) {
-			Block block = blocksMap.get(new Integer(position));
-        	if (block.hasChanged(capturedScreen)) {
-        		changedBlocks.add(new Integer(position));        		
-        	}
+                    Block block = blocksMap.get(new Integer(position));
+                    if (block.hasChanged(capturedScreen)) {
+                            changedBlocks.add(new Integer(position));        		
+                    }
         	
-    		if ((position % numColumns == 0) && (changedBlocks.size() > 0)) {
-    			Integer[] bc = new Integer[changedBlocks.size()];
-    			System.arraycopy(changedBlocks.toArray(), 0, bc, 0, bc.length);
-    			changedBlocks.clear();
-    			notifyChangedBlockListener(new BlockMessage(bc));
-    		}
+                    if ((position % numColumns == 0) && (changedBlocks.size() > 0)) {
+                            Integer[] bc = new Integer[changedBlocks.size()];
+                            System.arraycopy(changedBlocks.toArray(), 0, bc, 0, bc.length);
+                            changedBlocks.clear();
+                            notifyChangedBlockListener(new BlockMessage(bc));
+                    }
 		}
 
     }

@@ -91,10 +91,10 @@ public class DeskshareMain implements ClientListener, LifeLineListener {
         // Extract the values entered for the various options -- if the
         // options were not specified, the corresponding values will be
         // the default.
-        String hostValue = (String)parser.getOptionValue(host, "localhost");
-        Integer portValue = (Integer)parser.getOptionValue(port, new Integer(9123));
-        Integer listenPortValue = (Integer)parser.getOptionValue(listenPort, new Integer(9125));
-        String roomValue = (String)parser.getOptionValue(room, "85115");
+       // String hostValue = (String)parser.getOptionValue(host, "localhost");
+       // Integer portValue = (Integer)parser.getOptionValue(port, new Integer(9123));
+        //Integer listenPortValue = (Integer)parser.getOptionValue(listenPort, new Integer(9125));
+        //String roomValue = (String)parser.getOptionValue(room, "85115");
 //        Integer cWidthValue = (Integer)parser.getOptionValue(cWidth, new Integer((int)dim.getWidth()));
 //        Integer cHeightValue = (Integer)parser.getOptionValue(cHeight, new Integer((int)dim.getHeight()));
 //        Integer sWidthValue = (Integer)parser.getOptionValue(sWidth, new Integer((int)dim.getWidth()));
@@ -113,16 +113,25 @@ public class DeskshareMain implements ClientListener, LifeLineListener {
         
         Image image = Toolkit.getDefaultToolkit().getImage(iconValue);
         
-        lifeline = new LifeLine(listenPortValue.intValue(), dsMain);
+        //lifeline = new LifeLine(listenPortValue.intValue(), dsMain);
+        lifeline = new LifeLine( dsMain);
         lifeline.listen();
-        
+
+        /*
         client = new DeskshareClient.NewBuilder().host(hostValue).port(portValue)
         						.room(roomValue).captureWidth(cWidthValue)
         						.captureHeight(cHeightValue).scaleWidth(sWidthValue).scaleHeight(sHeightValue)
         						.quality(qualityValue).aspectRatio(aspectValue)
         						.x(xValue).y(yValue).fullScreen(fullScreenValue)
         						.httpTunnel(tunnelValue).trayIcon(image).enableTrayIconActions(true).build();
-        
+        */
+
+        client = new DeskshareClient.NewBuilder().captureWidth(cWidthValue)
+        						.captureHeight(cHeightValue).scaleWidth(sWidthValue).scaleHeight(sHeightValue)
+        						.quality(qualityValue).aspectRatio(aspectValue)
+        						.x(xValue).y(yValue).fullScreen(fullScreenValue)
+        						.trayIcon(image).enableTrayIconActions(true).build();
+
         client.addClientListener(dsMain);
         client.start();
         

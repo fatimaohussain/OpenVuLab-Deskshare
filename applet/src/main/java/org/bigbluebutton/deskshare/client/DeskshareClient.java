@@ -102,9 +102,9 @@ public class DeskshareClient {
 	 *
 	*/	
     public static class NewBuilder {
-       	private String host = "localhost";
-       	private int port = 9123;
-       	private String room = "default-room";
+       	//private String host = "localhost";
+       	//-private int port = 9123;
+       	//-private String room = "default-room";
        	private int captureWidth = 0;
        	private int captureHeight = 0;
        	private int scaleWidth = 0;
@@ -113,11 +113,13 @@ public class DeskshareClient {
        	private boolean aspectRatio = false; 
     	private int x = -1;
     	private int y = -1;
-    	private boolean httpTunnel = true;
+    	//-private boolean httpTunnel = true;
     	private Image sysTrayIcon;
     	private boolean enableTrayActions = false;
     	private boolean fullScreen = false;
     	
+        
+        /* -F
     	public NewBuilder host(String host) {
     		this.host = host;
     		return this;
@@ -132,7 +134,7 @@ public class DeskshareClient {
     		this.room = room;
     		return this;
     	}
-    	
+    	*/
     	public NewBuilder captureWidth(int width) {
     		this.captureWidth = width;
     		return this;
@@ -173,11 +175,12 @@ public class DeskshareClient {
     		return this;
     	}
     	
+        /* -F
     	public NewBuilder httpTunnel(boolean httpTunnel) {
     		this.httpTunnel = httpTunnel;
     		return this;
     	}
-
+        */
     	public NewBuilder fullScreen(boolean fullScreen) {
     		this.fullScreen = fullScreen;
     		return this;
@@ -203,9 +206,9 @@ public class DeskshareClient {
     		}
     		
     		ScreenShareInfo ssi = new ScreenShareInfo();
-    		ssi.host = host;
-    		ssi.port = port;
-    		ssi.room = room;
+    		//ssi.host = host;
+    		//-ssi.port = port;
+    		//-ssi.room = room;
     		ssi.captureWidth = captureWidth;
     		ssi.captureHeight = captureHeight;
     		ssi.scaleWidth = scaleWidth;
@@ -214,7 +217,7 @@ public class DeskshareClient {
     		ssi.aspectRatio = aspectRatio;
     		ssi.x = x;
     		ssi.y = y;
-    		ssi.httpTunnel = httpTunnel;
+    		//-ssi.httpTunnel = httpTunnel;
     		ssi.fullScreen = fullScreen;
     		ssi.sysTrayIcon = sysTrayIcon;
     		ssi.enableTrayActions = enableTrayActions;

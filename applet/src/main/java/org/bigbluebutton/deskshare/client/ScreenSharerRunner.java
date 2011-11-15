@@ -59,7 +59,8 @@ public class ScreenSharerRunner {
 		blockManager = new BlockManager();		
 		blockManager.initialize(screenDim, tileDim);
 		
-		sender = new NetworkStreamSender(blockManager, ssi.host, ssi.port, ssi.room, screenDim, tileDim, ssi.httpTunnel);
+		//-sender = new NetworkStreamSender(blockManager, ssi.host, ssi.port, ssi.room, screenDim, tileDim, ssi.httpTunnel);
+                sender = new NetworkStreamSender(blockManager, screenDim, tileDim);
 	}
 	
 	public void startSharing() {	
@@ -73,7 +74,8 @@ public class ScreenSharerRunner {
 			captureTaker.addListener(screenCapListener);
 			captureTaker.start();			
 			sender.start();
-			MouseLocationListenerImp mouseLocListener = new MouseLocationListenerImp(sender, ssi.room);
+			//MouseLocationListenerImp mouseLocListener = new MouseLocationListenerImp(sender, ssi.room);
+                        MouseLocationListenerImp mouseLocListener = new MouseLocationListenerImp(sender);
 			mouseLocTaker.addListener(mouseLocListener);
 			mouseLocTaker.start();			
 			started = true;
@@ -160,10 +162,11 @@ public class ScreenSharerRunner {
 		System.out.println("-----------------------------------------------------------------------\n\n");
 		System.out.println("Desktop Sharing v0.71");
 		System.out.println("Start");
-		System.out.println("Connecting to " + ssi.host + ":" + ssi.port + " room " + ssi.room);
+		//-System.out.println("Connecting to " + ssi.host + ":" + ssi.port + " room " + ssi.room);
+                //--System.out.println("Connecting to " + ssi.host + ":" );
 		System.out.println("Sharing " + ssi.captureWidth + "x" + ssi.captureHeight + " at " + ssi.x + "," + ssi.y);
 		System.out.println("Scale to " + ssi.scaleWidth + "x" + ssi.scaleHeight + " with quality = " + ssi.quality);
-		System.out.println("Http Tunnel: " + ssi.httpTunnel);
+		//-System.out.println("Http Tunnel: " + ssi.httpTunnel);
 	}
 	
 	private static final String LICENSE_HEADER = "This program is free software: you can redistribute it and/or modify\n" +

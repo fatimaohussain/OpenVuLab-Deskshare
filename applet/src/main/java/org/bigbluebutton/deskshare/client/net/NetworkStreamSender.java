@@ -37,10 +37,10 @@ public class NetworkStreamSender implements NextBlockRetriever, NetworkStreamLis
     private final BlockingQueue<Message> blockDataQ = new LinkedBlockingQueue<Message>();
     
     private final int numThreads;
-    private final String host;
-    private final int port;
-    private final String room;
-    private final boolean httpTunnel;
+   //- private final String host;
+    //-private final int port;
+    //-private final String room;
+    //-private final boolean httpTunnel;
     private NetworkSocketStreamSender[] socketSenders;
     private NetworkHttpStreamSender[] httpSenders;
     private boolean tunneling = false;
@@ -52,15 +52,14 @@ public class NetworkStreamSender implements NextBlockRetriever, NetworkStreamLis
 	private NetworkConnectionListener listener;
 	private final SequenceNumberGenerator seqNumGenerator = new SequenceNumberGenerator();
 	
-	public NetworkStreamSender(BlockManager blockManager, String host, int port,
-			String room, Dimension screenDim, Dimension blockDim, boolean httpTunnel) {
+	public NetworkStreamSender(BlockManager blockManager, Dimension screenDim, Dimension blockDim) {
 		this.blockManager = blockManager;
-		this.host = host;
-		this.port = port;
-		this.room = room;
+		//this.host = host;
+		//this.port = port;
+		//this.room = room;
 		this.screenDim = screenDim;
 		this.blockDim = blockDim;
-		this.httpTunnel = httpTunnel;
+		//this.httpTunnel = httpTunnel;
 		
 		numThreads = Runtime.getRuntime().availableProcessors();
 		System.out.println(NAME + "Starting up " + numThreads + " sender threads.");
@@ -86,7 +85,7 @@ public class NetworkStreamSender implements NextBlockRetriever, NetworkStreamLis
 				failedAttempts++;
 			}
 		}
-		
+		/*
 		if ((failedAttempts == numThreads) && httpTunnel) {
 			System.out.println(NAME + "Trying http tunneling");
 			failedAttempts = 0;
@@ -109,8 +108,8 @@ public class NetworkStreamSender implements NextBlockRetriever, NetworkStreamLis
 					return true;
 				}
 			}
-		} else {
-			if (numRunningThreads != numThreads) {
+		} else { */
+                        if (numRunningThreads != numThreads) {
 				try {
 					stop();
 				} catch (ConnectionException e) {
@@ -121,21 +120,21 @@ public class NetworkStreamSender implements NextBlockRetriever, NetworkStreamLis
 			} else {
 				return true;
 			}
-		}
-		System.out.println(NAME + "Http tunneling failed.");
-		return false;
+                //}
+		//System.out.println(NAME + "Http tunneling failed.");
+		//return false;
 	}
 	
 	private void createSender(int i) throws ConnectionException {
-		socketSenders[i] = new NetworkSocketStreamSender(i, this, room, screenDim, blockDim, seqNumGenerator);
+		socketSenders[i] = new NetworkSocketStreamSender(i, this, screenDim, blockDim, seqNumGenerator);
 		socketSenders[i].addListener(this);
-		socketSenders[i].connect(host, port);		
+		//-socketSenders[i].connect(host, port);		
 	}
 	
 	private void createHttpSender(int i) throws ConnectionException {
-		httpSenders[i] = new NetworkHttpStreamSender(i, this, room, screenDim, blockDim, seqNumGenerator);
+		httpSenders[i] = new NetworkHttpStreamSender(i, this, screenDim, blockDim, seqNumGenerator);
 		httpSenders[i].addListener(this);
-		httpSenders[i].connect(host);
+		//-httpSenders[i].connect(host);
 	}
 	
 	public void send(Message message) {
@@ -181,6 +180,7 @@ public class NetworkStreamSender implements NextBlockRetriever, NetworkStreamLis
 		
 	}
 
+        /*--
 	private boolean tryHttpTunneling() {
 		NetworkHttpStreamSender httpSender = new NetworkHttpStreamSender(0, this, room, screenDim, blockDim, seqNumGenerator);
 		try {
@@ -191,7 +191,7 @@ public class NetworkStreamSender implements NextBlockRetriever, NetworkStreamLis
 		}
 		return false;
 	}
-	
+	*/
 	public void blockSent(int position) {
 		blockManager.blockSent(position);
 	}

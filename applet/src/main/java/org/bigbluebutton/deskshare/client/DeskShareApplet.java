@@ -70,13 +70,22 @@ public class DeskShareApplet extends JApplet implements ClientListener {
 	public void start() {		 	
 		System.out.println("Desktop Sharing Applet Starting");
 		super.start();
-		client = new DeskshareClient.NewBuilder().host(hostValue).port(portValue)
+		/*client = new DeskshareClient.NewBuilder().host(hostValue).port(portValue)
 					.room(roomValue).captureWidth(cWidthValue)
 					.captureHeight(cHeightValue).scaleWidth(sWidthValue).scaleHeight(sHeightValue)
 					.quality(qualityValue).aspectRatio(aspectRatioValue)
 					.x(xValue).y(yValue).fullScreen(fullScreenValue)
 					.httpTunnel(tunnelValue).trayIcon(icon).enableTrayIconActions(false).build();
-		client.addClientListener(this);
+
+                 */
+
+                client = new DeskshareClient.NewBuilder().captureWidth(cWidthValue)
+					.captureHeight(cHeightValue).scaleWidth(sWidthValue).scaleHeight(sHeightValue)
+					.quality(qualityValue).aspectRatio(aspectRatioValue)
+					.x(xValue).y(yValue).fullScreen(fullScreenValue)
+					.trayIcon(icon).enableTrayIconActions(false).build();
+
+                 client.addClientListener(this);
 		client.start();
 	}
 			
